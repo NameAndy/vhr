@@ -1,0 +1,12 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /vhr
+    application-display-name: vhr
+       
+pagehelper:
+    helperDialect: mysql
+    reasonable: true
+    supportMethodsArguments: true
+    params: count=countSql
+    autoRuntimeDialect: true   

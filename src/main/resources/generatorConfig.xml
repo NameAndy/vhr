@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+  <!-- 数据库驱动 -->  
+  <context id="context1" targetRuntime="MyBatis3">
+        
+    <plugin type="org.mybatis.generator.plugins.SerializablePlugin" />
+
+  	<!-- 禁用mybatis插件自动生成的注释 -->  
+	<commentGenerator>
+		<property name="suppressDate" value="true" />
+		<property name="suppressAllComments" value="true" />
+	</commentGenerator>
+	
+	<!-- 数据库连接串配置 -->  
+     	<jdbcConnection 
+    	connectionURL="jdbc:mysql://localhost:3306/test?serverTimezone=UTC" 
+    	driverClass="com.mysql.jdbc.Driver" 
+    	password="123456" userId="root" 
+		>
+		</jdbcConnection>
+    	
+    <!-- 类型转换器 --> 
+	<javaTypeResolver type="org.mybatis.generator.internal.types.JavaTypeResolverDefaultImpl">
+        <property name="forceBigDecimals" value="false"/>
+    </javaTypeResolver>
+    
+    <!-- java实体类配置 -->  	
+    <javaModelGenerator 
+    	targetPackage="com.zlr.vhr.dao.bo" 
+    	targetProject="vhr/src/main/java" />
+    
+    <!-- sqlMap映射xml配置 -->  
+    <sqlMapGenerator 
+    	targetPackage="mybatis.mapper" 
+    	targetProject="vhr/src/main/resources" />
+   <!-- mybatis接口类配置 -->   	
+    <javaClientGenerator 
+    	targetPackage="com.zlr.vhr.dao.interfaces" 
+    	targetProject="vhr/src/main/java" 
+    	type="XMLMAPPER" />    
+			
+   
+    <table tableName="people" enableCountByExample="true"
+			enableUpdateByExample="true" enableDeleteByExample="true"
+			enableSelectByExample="true" selectByExampleQueryId="false" >
+   </table>
+    <!-- <table tableName="sys_area" enableCountByExample="true"
+			enableUpdateByExample="true" enableDeleteByExample="true"
+			enableSelectByExample="true" selectByExampleQueryId="false" >
+   </table> -->
+   
+  
+  </context>
+</generatorConfiguration>
