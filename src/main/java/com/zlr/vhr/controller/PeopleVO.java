@@ -3,9 +3,14 @@ package com.zlr.vhr.controller;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+
 public class PeopleVO implements Serializable {
+	@Min(value = 10,message ="Id最小为10" )
     private Long id;
 
+    @NotBlank(message="name不能为空")
     private String name;
 
     private Date birthday;
