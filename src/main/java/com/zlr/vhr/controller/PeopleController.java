@@ -29,7 +29,6 @@ public class PeopleController {
 	@ApiResponse(code = 200, message = "success", response = String.class)
 	@RequestMapping(value = "/v1.0/add")
 	public Integer add(@RequestBody @Validated PeopleVO request) {
-		
 		return iPeopleBusiSV.add(request);
 	}
 	
