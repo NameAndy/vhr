@@ -21,7 +21,6 @@ import com.zlr.vhr.common.constants.BusinessConstants;
 import com.zlr.vhr.common.exception.BusinessException;
 import com.zlr.vhr.common.exception.SystemException;
 import com.zlr.vhr.common.vo.BaseResponse;
-import com.zlr.vhr.util.StringUtil;
 
 /**
  * springboot 自定义全局异常处理类
@@ -38,7 +37,7 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
 	@ExceptionHandler({ SystemException.class })
 	public BaseResponse<Object> systemException(SystemException ex) {
 		log.error("SystemException:{}", ex.getMessage(), ex);
-		if (StringUtil.isBlank(ex.getErrorCode())) {
+		if (ex.getErrorCode() == null || "".equals(ex.getErrorCode().trim())) {
 			ex.setErrorCode(BusinessConstants.SYSTEM_EXCEPTION_CODE);
 		}
 		return new BaseResponse<>(false, ex.getErrorCode(), ex.getErrorMessage());
@@ -50,7 +49,7 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
 	@ExceptionHandler(BusinessException.class)
 	public BaseResponse<Object> businessException(BusinessException ex) {
 		log.error("BusinessException:{}", ex.getMessage(), ex);
-		if (StringUtil.isBlank(ex.getErrorCode())) {
+		if (ex.getErrorCode() == null || "".equals(ex.getErrorCode().trim())) {
 			ex.setErrorCode(BusinessConstants.BUSI_EXCEPTION_CODE);
 		}
 		return new BaseResponse<>(false, ex.getErrorCode(), ex.getErrorMessage());
@@ -82,7 +81,8 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
 	}
 
 	/**
-	 * 处理数据绑定异常
+	 * 处理数据绑定异常.<br>
+	 * {@link org.springframework.http.HttpStatus.BAD_REQUEST}
 	 */
 	@Override
 	public ResponseEntity<Object> handleBindException(BindException ex, HttpHeaders headers, HttpStatus status,
@@ -104,7 +104,8 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
 	}
 
 	/**
-	 * 处理数据转换异常
+	 * 处理数据转换异常. <br>
+	 * {@link org.springframework.http.HttpStatus.BAD_REQUEST}
 	 */
 	@Override
 	public ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers,
@@ -117,16 +118,31 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
 
 	
 	/**
-	 * 处理其他异常
+	 * 空指针异常.<br>
+	 * 虚拟机默认使用jvm, message和StackTrace都有值<br>
 	 */
-	@ExceptionHandler(Exception.class)
-	public BaseResponse<Object> exception(Exception ex) {
-		log.error("Exception:{}", ex.getMessage(), ex);
+	@ExceptionHandler(NullPointerException.class)
+	public BaseResponse<Object> nullPointerException(NullPointerException ex) {
+		String message = ex.getMessage() + "|" + ex.getStackTrace()[0].toString();
+		log.error("NullPointerException:{}", message, ex);
 		return new BaseResponse<>(false, BusinessConstants.BUSI_FAILURE_CODE, ex.getMessage());
 	}
 
 	/**
-	 * 定义响应实体类
+	 * 5xx异常. <br>
+	 * 处理其他异常 * 虚拟机默认使用jvm, message和StackTrace都有值<br>
+	 */
+	@ExceptionHandler(Exception.class)
+	public BaseResponse<Object> exception(Exception ex) {
+		String message = ex.getMessage() + "|" + ex.getStackTrace()[0].toString();
+		log.error("Exception:{}", message, ex);
+		return new BaseResponse<>(false, BusinessConstants.BUSI_FAILURE_CODE, ex.getMessage());
+	}
+
+	/**
+	 * 重写springframework响应实体类.<br>
+	 * 
+	 * @see org.springframework.http.ResponseEntity
 	 */
 	@Override
 	protected ResponseEntity<Object> handleExceptionInternal(Exception ex, @Nullable Object body, HttpHeaders headers,

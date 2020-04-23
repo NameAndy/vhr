@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+	<Properties>
+        <Property name="PROJECT_NAME">vhr</Property>
+    </Properties>
+  <Appenders>
+    <Console name="STDOUT" target="SYSTEM_OUT">
+     <!--  <JsonLayout  /> -->
+      <PatternLayout pattern="%d %-5p [%t] %C{2} (%F:%L) - %m%n"/>
+        
+    </Console>
+    
+    <RollingFile name="RollingFile" fileName="logs/srv-user-center.log"
+                     filePattern="logs/$${date:yyyy-MM}/srv-user-center-%d{yyyy-MM-dd}-%i.log">
+       
+       <!-- <PatternLayout pattern="%d %-5p [%t] %C{2} (%F:%L) - %m%n"/> -->
+       
+       <JSONLayout compact="true" eventEol="true"  >
+            <KeyValuePair key="@timestamp" value="$${date:yyyy-MM-dd'T'HH:mm:ss.SSSZ}"/>
+            <KeyValuePair key="project" value="${PROJECT_NAME}"/>
+            <KeyValuePair key="type" value="filebeat"/>
+       </JSONLayout>
+       
+       <Policies>
+         <TimeBasedTriggeringPolicy />
+         <SizeBasedTriggeringPolicy size="500 MB"/>
+       </Policies>
+       <DefaultRolloverStrategy max="10"/>
+     </RollingFile>
+    <Async name="ASYNC">
+      <AppenderRef ref="RollingFile"/>
+      <AppenderRef ref="STDOUT"/>
+    </Async>
+  </Appenders>
+  <Loggers>    
+    <!-- <logger name="com.ai.jf.user" level="info"/>
+    <logger name="com.ai.jf.user.service.atom" level="debug" />
+    <logger name="com.ai.jf.user.service.business"  level="info" />
+    <logger name="com.ai.jf.user.rest"  level="info" />
+    <logger name="com.ai.jf.user.util"  level="info" />
+    <logger name="com.ai.jf.user.config"  level="warn" />
+    <logger name="org.springframework.web"  level="error"/>
+    <logger name="com.ai.paas.ipaas.search"  level="info"/>
+    <logger name="com.ai.paas"  level="error"/>
+    <logger name="com.ai.jf.cmpt.cache" level="info"/>
+    <logger name="com.ai.jf.cmpt" level="error"/>
+    <logger name="io"  level="error" />
+    <logger name="com"  level="error" />
+    <logger name="org"  level="error" />
+    <logger name="springfox"  level="error" />
+    <logger name="groovy"  level="error" /> -->
+    <Root level="info">
+      <AppenderRef ref="RollingFile" />
+      <AppenderRef ref="STDOUT" />
+    </Root>
+  </Loggers>
+</Configuration>

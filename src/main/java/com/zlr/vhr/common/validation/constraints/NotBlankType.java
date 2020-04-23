@@ -48,7 +48,7 @@ public @interface NotBlankType {
 	/**
 	 * @return Value of dependent field
 	 */
-	String[] depValue();
+	String[] depValue() ; 
 
 	Class<?>[] groups() default {};
 
